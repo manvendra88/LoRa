@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h> 
 float array_SNR[99], maximum, SNRMax, requiredSNR;
-int  size, c, location = 1,currentSF,currentTxP,index;
+int  size, c, location = 1,currentSF,currentTxP,index,UsedDR, UsedTxP;
  
  
 float SNRMargin, installationMargin;
@@ -12,9 +12,13 @@ void get20SNR (void);
 void getUsedSF (void);
 void getUsedTxP (void);
 void getInstallationMargin(void);
+
+
+
 float RequiredSNRTable (int);
+int DR;
 
-
+int  getIdealTXPowerOffsetAndDR (int, int, int);
 int main()
 {
   get20SNR();
@@ -29,15 +33,58 @@ int main()
   getInstallationMargin();
   
   printf("Margin : %f\n",SNRMargin = SNRMax - requiredSNR - installationMargin);
+  float Marginby3 = SNRMargin/3;
+  printf("Marginby3 = %f\n",Marginby3);
   NStep = round(SNRMargin / 3);
-  printf("Current NStep : %d",NStep);
+  printf("Current NStep : %d\n",NStep);
   
   
+  getIdealTXPowerOffsetAndDR(NStep, UsedDR, index);
   
   
   return 0;
 }
-
+getIdealTXPowerOffsetAndDR(int NStep, int UsedDR, int UsedTxP)
+{
+	printf("Before ADR, settings are: NStep: %d | DR: %d (SF=%d) | TxPIndex: %d (TxP=%d)\n", NStep, UsedDR,currentSF, index, currentTxP);
+	
+	while(NStep!=0)
+	{
+		if(NStep>0)
+		{
+		
+		if(UsedDR<5)
+			{
+			UsedDR=UsedDR+1;
+			currentSF--;
+			NStep--;
+			}
+			else
+			{
+			index=index+1;
+			currentTxP=currentTxP-3;
+			NStep--;
+			}
+		
+		if(index>=6)
+		goto label;
+		}
+		
+		else
+		{
+			if(index>0)
+			{
+			index=index-1;
+			currentTxP=currentTxP+3;
+			NStep++;
+			 }
+			else
+			goto label;
+		}
+	}
+	label: printf("After ADR, settings are: NStep: %d | DR: %d (SF=%d) | TxPIndex: %d (TxP=%d)\n", NStep, UsedDR,currentSF, index, currentTxP);
+	
+}
 void get20SNR()
 {
   printf("Enter the number of elements in array :");
@@ -55,7 +102,27 @@ void getUsedSF(void)
   printf("Enter the SF in Use : ");
   scanf("%d",&currentSF);
   printf("for which Required SNR is ");
-  
+  switch (currentSF)
+  {
+  	case 7 :
+  		UsedDR=5;
+  		break;
+  	case 8:
+  		UsedDR=4;
+  		break;
+  	case 9:
+  		UsedDR=3;
+  		break;
+  	case 10:
+  		UsedDR=2;
+  		break;
+  	case 11:
+  		UsedDR=1;
+  		break;
+  	case 12:
+  		UsedDR=0;
+  		break;		    	
+  }
 }
 void getUsedTxP(void)
 {
