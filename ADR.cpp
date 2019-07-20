@@ -1,24 +1,29 @@
 #include <stdio.h>
 #include <math.h> 
+
+/**********************************Variables********************************/
+
+
 float array_SNR[99], maximum, SNRMax, requiredSNR;
 int  size, c, location = 1,currentSF,currentTxP,index,UsedDR, UsedTxP;
  
  
 float SNRMargin, installationMargin;
 int NStep;
+int DR;
+/************************************Functions*************************************/
+
 
 float maxSNR (float *);
-void get20SNR (void);
-void getUsedSF (void);
-void getUsedTxP (void);
-void getInstallationMargin(void);
-
-
-
+get20SNR ();
+getUsedSF () ;
+getUsedTxP ();
+getInstallationMargin();
 float RequiredSNRTable (int);
-int DR;
-
 int  getIdealTXPowerOffsetAndDR (int, int, int);
+
+/*************************************Main*****************************************/
+
 int main()
 {
   get20SNR();
@@ -44,6 +49,9 @@ int main()
   
   return 0;
 }
+
+/**********************************Function Declarations*********************************/
+
 getIdealTXPowerOffsetAndDR(int NStep, int UsedDR, int UsedTxP)
 {
 	printf("Before ADR, settings are: NStep: %d | DR: %d (SF=%d) | TxPIndex: %d (TxP=%d)\n", NStep, UsedDR,currentSF, index, currentTxP);
@@ -219,4 +227,3 @@ switch (n)
     return requiredSNR = -7.5;
 }
 }
-
