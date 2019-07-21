@@ -8,3 +8,8 @@ References
 [2] https://github.com/TheThingsNetwork/ttn/issues/265
 [3] Priyanka Agarwal MSc.Thesis
 
+Will also input channel as an output.
+Will also input interference or no interference as an input.
+BW as an input paramter was an important aspect to discover because smaller the BW, smaller is the chip rate. Maybe this could be help me detect the chirps in the spectrogram
+
+
